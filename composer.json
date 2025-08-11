@@ -1,0 +1,42 @@
+{
+  "name": "stormtales/shop",
+  "description": "StormTales Shop Plugin for Craft CMS",
+  "type": "craft-plugin",
+  "version": "1.0.0",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "shop",
+    "ecommerce"
+  ],
+  "support": {
+    "email": "vivian.voss@byvoss.tech"
+  },
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "ByVoss Technologies",
+      "homepage": "https://byvoss.tech"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "craftcms/cms": "^5.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "stormtales\\shop\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "StormTales Shop",
+    "handle": "stormtaleshop",
+    "developer": "ByVoss Technologies",
+    "developerUrl": "https://byvoss.tech",
+    "documentationUrl": "",
+    "changelogUrl": "",
+    "class": "stormtales\\shop\\Shop"
+  }
+}
