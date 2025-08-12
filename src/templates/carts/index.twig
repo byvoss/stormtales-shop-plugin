@@ -1,0 +1,18 @@
+{# StormTales Shop Carts Index #}
+{% extends "_layouts/cp" %}
+
+{% block content %}
+    <div class="flex">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div id="no-carts" class="zilch">
+        <div class="icon">
+            {{ svg('@appicons/shopping-cart.svg', namespace=false, sanitize=false)|raw }}
+        </div>
+        <p>No active shopping carts.</p>
+        <p class="light">Active and abandoned carts will appear here.</p>
+    </div>
+
+    {# TODO: Add carts table once we have cart data #}
+{% endblock %}

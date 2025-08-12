@@ -1,0 +1,18 @@
+{# StormTales Shop Orders Index #}
+{% extends "_layouts/cp" %}
+
+{% block content %}
+    <div class="flex">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div id="no-orders" class="zilch">
+        <div class="icon">
+            {{ svg('@appicons/gift.svg', namespace=false, sanitize=false)|raw }}
+        </div>
+        <p>No orders yet.</p>
+        <p class="light">Orders will appear here once customers start purchasing products.</p>
+    </div>
+
+    {# TODO: Add orders table once we have order data #}
+{% endblock %}

@@ -1,0 +1,45 @@
+{# StormTales Shop Settings #}
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+
+    <div class="readable">
+        <blockquote class="note">
+            <p><strong>Alpha Version {{ craft.app.plugins.getPlugin('stormtaleshop').version }}</strong></p>
+            <p>This plugin is in early development. Settings will be added as features are implemented.</p>
+        </blockquote>
+
+        <hr>
+
+        <h2>Planned Settings</h2>
+        
+        <h3>General</h3>
+        <ul>
+            <li>Currency settings</li>
+            <li>Tax configuration (OSS)</li>
+            <li>Shipping zones</li>
+        </ul>
+
+        <h3>Printful Integration</h3>
+        <ul>
+            <li>API credentials</li>
+            <li>Sync settings</li>
+            <li>Webhook configuration</li>
+        </ul>
+
+        <h3>Payment Gateways</h3>
+        <ul>
+            <li>Mollie configuration</li>
+            <li>Stripe configuration</li>
+        </ul>
+
+        <h3>Email Templates</h3>
+        <ul>
+            <li>Order confirmation</li>
+            <li>Shipping notification</li>
+            <li>Abandoned cart</li>
+        </ul>
+    </div>
+{% endblock %}

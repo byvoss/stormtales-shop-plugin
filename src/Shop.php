@@ -85,8 +85,8 @@ class Shop extends Plugin
             function(RegisterCpNavItemsEvent $event) {
                 $event->navItems[] = [
                     'url' => 'stormtaleshop/products',
-                    'label' => 'Products',
-                    'icon' => '@stormtales/shop/icon.svg',
+                    'label' => 'Shop',
+                    'icon' => 'shopping-cart',
                     'subnav' => [
                         'products' => ['label' => 'All Products', 'url' => 'stormtaleshop/products'],
                         'orders' => ['label' => 'Orders', 'url' => 'stormtaleshop/orders'],
