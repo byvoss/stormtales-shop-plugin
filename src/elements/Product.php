@@ -141,6 +141,14 @@ class Product extends Element
         return new ProductQuery(static::class);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getCpEditUrl(): ?string
+    {
+        return 'stormtaleshop/products/' . $this->id;
+    }
+
     protected static function defineSources(string $context = null): array
     {
         $sources = [
@@ -568,7 +576,8 @@ class Product extends Element
         
         // Copy other properties
         $variant->customAttributes = array_merge($this->customAttributes, $attributes);
-        $variant->images = $additionalData['images'] ?? $this->images;
+        $variant->primaryImageId = $additionalData['primaryImageId'] ?? $this->primaryImageId;
+        $variant->frontImagesIds = $additionalData['frontImagesIds'] ?? $this->frontImagesIds;
         $variant->isDigital = $this->isDigital;
         
         // Save the variant
@@ -1169,8 +1178,16 @@ class Product extends Element
         $record->allowBackorder = $this->allowBackorder;
         $record->status = $this->status;
         $record->customAttributes = $this->customAttributes;
-        $record->images = $this->images;
         $record->priceTiers = $this->priceTiers;
+        $record->primaryImageId = $this->primaryImageId;
+        $record->frontImagesIds = $this->frontImagesIds;
+        $record->backImagesIds = $this->backImagesIds;
+        $record->sideImagesIds = $this->sideImagesIds;
+        $record->detailImagesIds = $this->detailImagesIds;
+        $record->lifestyleImagesIds = $this->lifestyleImagesIds;
+        $record->sizeChartId = $this->sizeChartId;
+        $record->videoIds = $this->videoIds;
+        $record->arModelId = $this->arModelId;
         $record->isDigital = $this->isDigital;
         $record->downloadUrl = $this->downloadUrl;
         $record->downloadLimit = $this->downloadLimit;

@@ -13,9 +13,11 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterCpNavItemsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
 use craft\services\Fields;
+use craft\web\twig\variables\Cp;
 use craft\web\UrlManager;
 
 use stormtales\shop\elements\Product;
@@ -76,7 +78,41 @@ class Shop extends Plugin
             }
         );
 
-        // Register routes
+        // Register CP navigation
+        Event::on(
+            Cp::class,
+            Cp::EVENT_REGISTER_CP_NAV_ITEMS,
+            function(RegisterCpNavItemsEvent $event) {
+                $event->navItems[] = [
+                    'url' => 'stormtaleshop/products',
+                    'label' => 'Products',
+                    'icon' => '@stormtales/shop/icon.svg',
+                    'subnav' => [
+                        'products' => ['label' => 'All Products', 'url' => 'stormtaleshop/products'],
+                        'orders' => ['label' => 'Orders', 'url' => 'stormtaleshop/orders'],
+                        'carts' => ['label' => 'Carts', 'url' => 'stormtaleshop/carts'],
+                        'settings' => ['label' => 'Settings', 'url' => 'stormtaleshop/settings'],
+                    ],
+                ];
+            }
+        );
+
+        // Register CP routes
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function(RegisterUrlRulesEvent $event) {
+                $event->rules['stormtaleshop/products'] = 'stormtaleshop/products/index';
+                $event->rules['stormtaleshop/products/new'] = 'stormtaleshop/products/edit';
+                $event->rules['stormtaleshop/products/<elementId:\d+>'] = 'stormtaleshop/products/edit';
+                $event->rules['stormtaleshop/orders'] = 'stormtaleshop/orders/index';
+                $event->rules['stormtaleshop/orders/<orderId:\d+>'] = 'stormtaleshop/orders/edit';
+                $event->rules['stormtaleshop/carts'] = 'stormtaleshop/carts/index';
+                $event->rules['stormtaleshop/settings'] = 'stormtaleshop/settings/index';
+            }
+        );
+
+        // Register site routes
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,

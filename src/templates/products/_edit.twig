@@ -1,0 +1,94 @@
+{# StormTales Shop Product Edit Form #}
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set fullPageForm = true %}
+{% set saveShortcut = true %}
+
+{% block actionButton %}
+    <div class="btngroup">
+        <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+        <div class="btn submit menubtn"></div>
+        <div class="menu">
+            <ul>
+                <li>
+                    <a class="formsubmit" data-redirect="{{ continueEditingUrl|hash }}">
+                        {{ "Save and continue editing"|t('app') }}
+                        <span class="shortcut">⌘S</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="formsubmit" data-redirect="{{ 'stormtaleshop/products/new'|hash }}">
+                        {{ "Save and add another"|t('app') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action" value="stormtaleshop/products/save">
+    {{ redirectInput('stormtaleshop/products') }}
+    
+    {% if element.id %}
+        <input type="hidden" name="elementId" value="{{ element.id }}">
+    {% endif %}
+
+    <div id="fields">
+        {{ forms.textField({
+            label: "Title"|t('app'),
+            id: 'title',
+            name: 'title',
+            value: element.title,
+            errors: element.getErrors('title'),
+            required: true,
+            autofocus: true
+        }) }}
+
+        {{ forms.textField({
+            label: "SKU"|t('stormtaleshop'),
+            id: 'sku',
+            name: 'sku',
+            value: element.sku,
+            errors: element.getErrors('sku'),
+            required: true
+        }) }}
+
+        {{ forms.textField({
+            label: "Price"|t('stormtaleshop'),
+            id: 'price',
+            name: 'price',
+            value: element.price|number_format(2),
+            errors: element.getErrors('price'),
+            required: true,
+            type: 'number',
+            step: '0.01',
+            min: '0'
+        }) }}
+
+        {{ forms.textareaField({
+            label: "Description"|t('stormtaleshop'),
+            id: 'description',
+            name: 'description',
+            value: element.description,
+            errors: element.getErrors('description'),
+            rows: 4
+        }) }}
+    </div>
+{% endblock %}
+
+{% block details %}
+    <div class="meta">
+        {% if element.id %}
+            <div class="data">
+                <h5 class="heading">{{ "Date Created"|t('app') }}</h5>
+                <div class="value">{{ element.dateCreated|datetime('short') }}</div>
+            </div>
+            <div class="data">
+                <h5 class="heading">{{ "Date Updated"|t('app') }}</h5>
+                <div class="value">{{ element.dateUpdated|datetime('short') }}</div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
