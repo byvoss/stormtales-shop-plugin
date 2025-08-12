@@ -27,8 +27,16 @@ use yii\db\ActiveQueryInterface;
  * @property bool $allowBackorder
  * @property string $status
  * @property array $customAttributes
- * @property array $images
  * @property array $priceTiers
+ * @property int|null $primaryImageId
+ * @property array $frontImagesIds
+ * @property array $backImagesIds
+ * @property array $sideImagesIds
+ * @property array $detailImagesIds
+ * @property array $lifestyleImagesIds
+ * @property int|null $sizeChartId
+ * @property array $videoIds
+ * @property int|null $arModelId
  * @property bool $isDigital
  * @property string|null $downloadUrl
  * @property int|null $downloadLimit

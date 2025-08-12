@@ -10,12 +10,15 @@
 namespace stormtales\shop;
 
 use Craft;
+use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterUrlRulesEvent;
+use craft\services\Elements;
 use craft\services\Fields;
 use craft\web\UrlManager;
-use craft\events\RegisterUrlRulesEvent;
 
+use stormtales\shop\elements\Product;
 use stormtales\shop\services\CartService;
 use stormtales\shop\services\OrderService;
 use stormtales\shop\services\PaymentService;
@@ -63,6 +66,15 @@ class Shop extends Plugin
             'orders' => OrderService::class,
             'payments' => PaymentService::class,
         ]);
+        
+        // Register Product element type
+        Event::on(
+            Elements::class,
+            Elements::EVENT_REGISTER_ELEMENT_TYPES,
+            function(RegisterComponentTypesEvent $event) {
+                $event->types[] = Product::class;
+            }
+        );
 
         // Register routes
         Event::on(
