@@ -10,6 +10,7 @@ namespace stormtales\shop\migrations;
 
 use Craft;
 use craft\db\Migration;
+use craft\elements\Tag;
 use craft\models\TagGroup;
 
 /**
@@ -237,63 +238,51 @@ class Install extends Migration
         $groups = [
             [
                 'handle' => 'sku',
-                'name' => 'Product SKUs',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Product SKUs'
             ],
             [
                 'handle' => 'hierarchy',
-                'name' => 'Product Hierarchy',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Product Hierarchy'
             ],
             [
                 'handle' => 'attributes',
-                'name' => 'Product Attributes',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Product Attributes'
             ],
             [
                 'handle' => 'features',
-                'name' => 'Product Features',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Product Features'
             ],
             [
                 'handle' => 'categories',
-                'name' => 'Product Categories',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Product Categories'
             ],
             [
                 'handle' => 'system',
-                'name' => 'System Tags',
-                'fieldLayoutType' => Tag::class
+                'name' => 'System Tags'
             ],
             [
                 'handle' => 'internal',
-                'name' => 'Internal Tags',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Internal Tags'
             ],
             [
                 'handle' => 'relations',
-                'name' => 'Product Relations',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Product Relations'
             ],
             [
                 'handle' => 'mythology',
-                'name' => 'Mythology',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Mythology'
             ],
             [
                 'handle' => 'entities',
-                'name' => 'Mythological Entities',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Mythological Entities'
             ],
             [
                 'handle' => 'printfulBlacklist',
-                'name' => 'Printful Blacklist',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Printful Blacklist'
             ],
             [
                 'handle' => 'variantOptions',
-                'name' => 'Variant Options',
-                'fieldLayoutType' => Tag::class
+                'name' => 'Variant Options'
             ]
         ];
         

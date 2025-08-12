@@ -44,7 +44,7 @@ class Product extends Element
     // =========================================================================
 
     public string $sku = '';
-    public string $title = '';
+    public ?string $title = null;  // Must be nullable to match Element base class
     public ?string $description = null;
     public float $price = 0.00;
     public ?float $comparePrice = null;
