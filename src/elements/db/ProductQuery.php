@@ -27,7 +27,7 @@ class ProductQuery extends ElementQuery
     public mixed $stock = null;
     public bool|null $trackStock = null;
     public bool|null $allowBackorder = null;
-    public ?string $status = null;
+    public array|string|null $status = null;
     public bool|null $isMainProduct = null;
     public bool|null $isVariant = null;
     public ?string $parentSku = null;
