@@ -121,7 +121,7 @@ class ProductsController extends Controller
                 ]);
             }
 
-            $this->setFailFlash(Craft::t('stormtaleshop', 'Couldn't save product.'));
+            $this->setFailFlash(Craft::t('stormtaleshop', 'Couldn\'t save product.'));
 
             // Send the product back to the template
             Craft::$app->getUrlManager()->setRouteParams([
