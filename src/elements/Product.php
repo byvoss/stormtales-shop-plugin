@@ -149,6 +149,53 @@ class Product extends Element
         return 'stormtaleshop/products/' . $this->id;
     }
 
+    public function getTableAttributeHtml(string $attribute): string
+    {
+        switch ($attribute) {
+            case 'price':
+                return Craft::$app->getFormatter()->asCurrency($this->price, 'EUR');
+            case 'stock':
+                if (!$this->trackStock) {
+                    return '∞';
+                }
+                if ($this->stock === 0) {
+                    return '<span class="error">Out of Stock</span>';
+                }
+                if ($this->stock <= 5) {
+                    return '<span class="warning">' . $this->stock . '</span>';
+                }
+                return (string) $this->stock;
+            case 'status':
+                $color = match($this->status) {
+                    'active' => 'green',
+                    'inactive' => 'orange',
+                    'discontinued' => 'red',
+                    default => 'light'
+                };
+                return '<span class="status ' . $color . '"></span> ' . ucfirst($this->status);
+        }
+        
+        return parent::getTableAttributeHtml($attribute);
+    }
+
+    protected static function defineTableAttributes(): array
+    {
+        return [
+            'title' => Craft::t('app', 'Title'),
+            'sku' => Craft::t('stormtaleshop', 'SKU'),
+            'price' => Craft::t('stormtaleshop', 'Price'),
+            'stock' => Craft::t('stormtaleshop', 'Stock'),
+            'status' => Craft::t('app', 'Status'),
+            'dateCreated' => Craft::t('app', 'Date Created'),
+            'dateUpdated' => Craft::t('app', 'Date Updated'),
+        ];
+    }
+
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        return ['title', 'sku', 'price', 'stock', 'status'];
+    }
+
     protected static function defineSources(string $context = null): array
     {
         $sources = [
@@ -1152,6 +1199,45 @@ class Product extends Element
         $rules[] = [['status'], 'in', 'range' => ['active', 'inactive', 'discontinued']];
         
         return $rules;
+    }
+
+    protected function populateFromDbRow(array $row): void
+    {
+        parent::populateFromDbRow($row);
+        
+        // Populate Product-specific properties
+        $this->sku = $row['sku'] ?? '';
+        $this->price = (float) ($row['price'] ?? 0);
+        $this->comparePrice = $row['comparePrice'] ? (float) $row['comparePrice'] : null;
+        $this->weight = (float) ($row['weight'] ?? 0);
+        $this->weightUnit = $row['weightUnit'] ?? 'kg';
+        $this->dimensions = is_string($row['dimensions'] ?? '') ? json_decode($row['dimensions'], true) : ($row['dimensions'] ?? []);
+        $this->stock = $row['stock'] !== null ? (int) $row['stock'] : null;
+        $this->trackStock = (bool) ($row['trackStock'] ?? true);
+        $this->allowBackorder = (bool) ($row['allowBackorder'] ?? false);
+        $this->status = $row['status'] ?? 'active';
+        $this->customAttributes = is_string($row['customAttributes'] ?? '') ? json_decode($row['customAttributes'], true) : ($row['customAttributes'] ?? []);
+        $this->priceTiers = is_string($row['priceTiers'] ?? '') ? json_decode($row['priceTiers'], true) : ($row['priceTiers'] ?? []);
+        
+        // Media fields
+        $this->primaryImageId = $row['primaryImageId'] !== null ? (int) $row['primaryImageId'] : null;
+        $this->frontImagesIds = is_string($row['frontImagesIds'] ?? '') ? json_decode($row['frontImagesIds'], true) : ($row['frontImagesIds'] ?? []);
+        $this->backImagesIds = is_string($row['backImagesIds'] ?? '') ? json_decode($row['backImagesIds'], true) : ($row['backImagesIds'] ?? []);
+        $this->sideImagesIds = is_string($row['sideImagesIds'] ?? '') ? json_decode($row['sideImagesIds'], true) : ($row['sideImagesIds'] ?? []);
+        $this->detailImagesIds = is_string($row['detailImagesIds'] ?? '') ? json_decode($row['detailImagesIds'], true) : ($row['detailImagesIds'] ?? []);
+        $this->lifestyleImagesIds = is_string($row['lifestyleImagesIds'] ?? '') ? json_decode($row['lifestyleImagesIds'], true) : ($row['lifestyleImagesIds'] ?? []);
+        $this->sizeChartId = $row['sizeChartId'] !== null ? (int) $row['sizeChartId'] : null;
+        $this->videoIds = is_string($row['videoIds'] ?? '') ? json_decode($row['videoIds'], true) : ($row['videoIds'] ?? []);
+        $this->arModelId = $row['arModelId'] !== null ? (int) $row['arModelId'] : null;
+        
+        // Digital product fields
+        $this->isDigital = (bool) ($row['isDigital'] ?? false);
+        $this->downloadUrl = $row['downloadUrl'] ?? null;
+        $this->downloadLimit = $row['downloadLimit'] !== null ? (int) $row['downloadLimit'] : null;
+        
+        // Printful fields
+        $this->printfulId = $row['printfulId'] ?? null;
+        $this->printfulSyncVariantId = $row['printfulSyncVariantId'] ?? null;
     }
 
     public function afterSave(bool $isNew): void
