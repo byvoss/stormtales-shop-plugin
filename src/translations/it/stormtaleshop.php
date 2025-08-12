@@ -17,6 +17,10 @@ return [
     'Settings' => 'Impostazioni',
     
     // Products
+    'All Products' => 'Tutti i Prodotti',
+    'SKU' => 'Codice Articolo',
+    'Price' => 'Prezzo',
+    'Description' => 'Descrizione',
     'New Product' => 'Nuovo Prodotto',
     'Create a new Product' => 'Crea un nuovo prodotto',
     'Product saved.' => 'Prodotto salvato.',

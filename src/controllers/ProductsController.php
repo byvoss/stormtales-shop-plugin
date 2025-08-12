@@ -28,12 +28,10 @@ class ProductsController extends Controller
     {
         $variables = [
             'elementType' => Product::class,
-            'title' => 'Products',
-            'newBtnLabel' => 'New Product',
-            'newBtnUrl' => 'stormtaleshop/products/new',
+            'title' => Craft::t('stormtaleshop', 'Products'),
         ];
 
-        return $this->renderTemplate('stormtaleshop/_elements/index', $variables);
+        return $this->renderTemplate('_layouts/elementindex', $variables);
     }
 
     /**
@@ -83,7 +81,7 @@ class ProductsController extends Controller
         // Set the "Save" redirect URL  
         $variables['redirectUrl'] = 'stormtaleshop/products';
 
-        return $this->renderTemplate('stormtaleshop/products/_edit', $variables);
+        return $this->renderTemplate('stormtaleshop/products/edit', $variables);
     }
 
     /**

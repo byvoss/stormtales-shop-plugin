@@ -17,6 +17,10 @@ return [
     'Settings' => 'Settings',
     
     // Products
+    'All Products' => 'All Products',
+    'SKU' => 'SKU',
+    'Price' => 'Price',
+    'Description' => 'Description',
     'New Product' => 'New Product',
     'Create a new Product' => 'Create a new Product',
     'Product saved.' => 'Product saved.',

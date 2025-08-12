@@ -1,0 +1,11 @@
+{# StormTales Shop Products Index #}
+{% extends "_layouts/elementindex" %}
+
+{% set title = 'Products'|t('stormtaleshop') %}
+{% set elementType = 'stormtales\\shop\\elements\\Product' %}
+
+{% block actionButton %}
+    <a class="btn submit add icon" href="{{ url('stormtaleshop/products/new') }}">
+        {{ 'New Product'|t('stormtaleshop') }}
+    </a>
+{% endblock %}
