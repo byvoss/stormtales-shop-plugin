@@ -10,8 +10,8 @@
         <div class="icon">
             {{ svg('@appicons/shopping-cart.svg')|attr({width: 100, height: 100}) }}
         </div>
-        <p>No active shopping carts.</p>
-        <p class="light">Active and abandoned carts will appear here.</p>
+        <p>{{ 'No active shopping carts.'|t('stormtaleshop') }}</p>
+        <p class="light">{{ 'Active and abandoned carts will appear here.'|t('stormtaleshop') }}</p>
     </div>
 
     {# TODO: Add carts table once we have cart data #}
