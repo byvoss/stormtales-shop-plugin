@@ -58,7 +58,18 @@ class Product extends Element
     
     // Flexible attributes for any additional data
     public array $customAttributes = [];
-    public array $images = [];
+    
+    // Asset Field IDs for Craft's DAM
+    // These will be populated via Field Layout in CP
+    public ?int $primaryImageId = null;           // Main product image Asset
+    public array $frontImagesIds = [];            // Front view Assets
+    public array $backImagesIds = [];             // Back view Assets  
+    public array $sideImagesIds = [];             // Side view Assets
+    public array $detailImagesIds = [];           // Detail shot Assets
+    public array $lifestyleImagesIds = [];        // Lifestyle Assets
+    public ?int $sizeChartId = null;              // Size chart Asset
+    public array $videoIds = [];                  // Video Assets
+    public ?int $arModelId = null;                // 3D/AR model Asset
     
     // SEO fields
     public ?string $metaTitle = null;
@@ -707,6 +718,218 @@ class Product extends Element
         return $results;
     }
 
+    /**
+     * Media Management Methods
+     * =========================================================================
+     */
+    
+    /**
+     * Get primary image Asset
+     */
+    public function getPrimaryImage(): ?\craft\elements\Asset
+    {
+        if ($this->primaryImageId) {
+            return \craft\elements\Asset::find()->id($this->primaryImageId)->one();
+        }
+        
+        // Fallback to first front image
+        if (!empty($this->frontImagesIds)) {
+            return \craft\elements\Asset::find()->id($this->frontImagesIds[0])->one();
+        }
+        
+        // Fallback to first image in any category
+        foreach (['backImagesIds', 'sideImagesIds', 'detailImagesIds', 'lifestyleImagesIds'] as $property) {
+            if (!empty($this->$property)) {
+                return \craft\elements\Asset::find()->id($this->$property[0])->one();
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Get all product images for gallery
+     */
+    public function getGalleryImages(): array
+    {
+        $gallery = [];
+        
+        // Primary image first
+        if ($primary = $this->getPrimaryImage()) {
+            $gallery[] = [
+                'asset' => $primary,
+                'url' => $primary->getUrl(),
+                'type' => 'primary',
+                'caption' => $primary->title ?: 'Main product image',
+                'alt' => $primary->alt ?: $this->title
+            ];
+        }
+        
+        // Add categorized images
+        $imageGroups = [
+            'front' => $this->frontImagesIds,
+            'back' => $this->backImagesIds,
+            'side' => $this->sideImagesIds,
+            'detail' => $this->detailImagesIds,
+            'lifestyle' => $this->lifestyleImagesIds
+        ];
+        
+        foreach ($imageGroups as $type => $assetIds) {
+            if (!empty($assetIds)) {
+                $assets = \craft\elements\Asset::find()->id($assetIds)->all();
+                foreach ($assets as $index => $asset) {
+                    $gallery[] = [
+                        'asset' => $asset,
+                        'url' => $asset->getUrl(),
+                        'type' => $type,
+                        'caption' => $asset->title ?: ucfirst($type) . ' view ' . ($index + 1),
+                        'alt' => $asset->alt ?: $this->title . ' - ' . ucfirst($type) . ' view'
+                    ];
+                }
+            }
+        }
+        
+        return $gallery;
+    }
+    
+    /**
+     * Get images by type
+     */
+    public function getImagesByType(string $type): array
+    {
+        $propertyMap = [
+            'primary' => 'primaryImageId',
+            'front' => 'frontImagesIds',
+            'back' => 'backImagesIds',
+            'side' => 'sideImagesIds',
+            'detail' => 'detailImagesIds',
+            'lifestyle' => 'lifestyleImagesIds'
+        ];
+        
+        if (!isset($propertyMap[$type])) {
+            return [];
+        }
+        
+        $property = $propertyMap[$type];
+        $assetIds = $this->$property;
+        
+        if (empty($assetIds)) {
+            return [];
+        }
+        
+        if (is_array($assetIds)) {
+            return \craft\elements\Asset::find()->id($assetIds)->all();
+        } else {
+            $asset = \craft\elements\Asset::find()->id($assetIds)->one();
+            return $asset ? [$asset] : [];
+        }
+    }
+    
+    /**
+     * Check if product has video
+     */
+    public function hasVideo(): bool
+    {
+        return !empty($this->videoIds);
+    }
+    
+    /**
+     * Get product videos
+     */
+    public function getVideos(): array
+    {
+        if (empty($this->videoIds)) {
+            return [];
+        }
+        
+        return \craft\elements\Asset::find()
+            ->id($this->videoIds)
+            ->kind('video')
+            ->all();
+    }
+    
+    /**
+     * Check if product has AR model
+     */
+    public function hasArModel(): bool
+    {
+        return !empty($this->arModelId);
+    }
+    
+    /**
+     * Get AR model Asset
+     */
+    public function getArModel(): ?\craft\elements\Asset
+    {
+        if ($this->arModelId) {
+            return \craft\elements\Asset::find()->id($this->arModelId)->one();
+        }
+        return null;
+    }
+    
+    /**
+     * Get size chart Asset
+     */
+    public function getSizeChart(): ?\craft\elements\Asset
+    {
+        if ($this->sizeChartId) {
+            return \craft\elements\Asset::find()->id($this->sizeChartId)->one();
+        }
+        return null;
+    }
+    
+    /**
+     * Check if has size chart
+     */
+    public function hasSizeChart(): bool
+    {
+        return !empty($this->sizeChartId);
+    }
+    
+    /**
+     * Get hover image for product cards (typically back view)
+     */
+    public function getHoverImage(): ?\craft\elements\Asset
+    {
+        // First try back view
+        if (!empty($this->backImagesIds)) {
+            return \craft\elements\Asset::find()->id($this->backImagesIds[0])->one();
+        }
+        
+        // Then try second front view
+        if (isset($this->frontImagesIds[1])) {
+            return \craft\elements\Asset::find()->id($this->frontImagesIds[1])->one();
+        }
+        
+        // Then try side view
+        if (!empty($this->sideImagesIds)) {
+            return \craft\elements\Asset::find()->id($this->sideImagesIds[0])->one();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Get thumbnail set for variant selector
+     */
+    public function getVariantThumbnails(): array
+    {
+        $thumbnails = [];
+        
+        // Use primary or first front image
+        $mainImage = $this->getPrimaryImage();
+        if ($mainImage) {
+            $thumbnails[] = [
+                'asset' => $mainImage,
+                'url' => $mainImage->getUrl(['width' => 100, 'height' => 100]),
+                'label' => $this->getVariantLabel(),
+                'sku' => $this->sku
+            ];
+        }
+        
+        return $thumbnails;
+    }
+    
     /**
      * Get variants grouped by attribute type
      * Returns: ['color' => [...], 'size' => [...], etc.]
